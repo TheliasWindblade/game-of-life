@@ -14,6 +14,9 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.util.converter.NumberStringConverter;
 
+import java.util.function.UnaryOperator;
+import java.util.regex.Pattern;
+
 
 public class WindowController {
     @FXML
@@ -33,6 +36,9 @@ public class WindowController {
 
     @FXML
     private TextField sizePrompt;
+
+    @FXML
+    private ColorPicker cellColor;
 
 
     private boolean running=false;
@@ -62,6 +68,8 @@ public class WindowController {
     public void setView(){
         Coordinates c = new Coordinates(Integer.valueOf(xCoord.getText()),Integer.valueOf(yCoord.getText()));
         gridView.setView(c);
+        xCoord.setText(Integer.toString(gridView.getViewport().getX()));
+        yCoord.setText(Integer.toString(gridView.getViewport().getY()));
     }
 
     public void setViewportSize(){
@@ -71,10 +79,15 @@ public class WindowController {
 
     public void refocusGrid(){ playButton.getParent().requestFocus();}
 
+    public void changeCellColor(){
+        gridView.setCellColor(cellColor.getValue());
+    }
+
     public void buildHandlers(){
-        xCoord.setTextFormatter(new TextFormatter<>(new NumberStringConverter()));
-        yCoord.setTextFormatter(new TextFormatter<>(new NumberStringConverter()));
-        sizePrompt.setTextFormatter(new TextFormatter<>(new NumberStringConverter()));
+        Pattern pattern=Pattern.compile("-?\\d+");
+        xCoord.setTextFormatter(new TextFormatter((UnaryOperator<TextFormatter.Change>) change -> pattern.matcher(change.getControlNewText()).matches() ? change : null));
+        yCoord.setTextFormatter(new TextFormatter((UnaryOperator<TextFormatter.Change>) change -> pattern.matcher(change.getControlNewText()).matches() ? change : null));
+        sizePrompt.setTextFormatter(new TextFormatter((UnaryOperator<TextFormatter.Change>) change -> pattern.matcher(change.getControlNewText()).matches() ? change : null));
 
         xCoord.setText("0");
         yCoord.setText("0");
@@ -123,7 +136,7 @@ public class WindowController {
         Alert alert=new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("About");
         alert.setHeaderText("Game of Life");
-        alert.setContentText("By Thelias\nVersion 1.1.0");
+        alert.setContentText("By Thelias\nVersion 1.1.2");
         alert.showAndWait();
     }
 

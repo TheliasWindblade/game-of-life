@@ -12,6 +12,7 @@ public class GridView extends Canvas implements Observer {
 
     private Coordinates currView;
     private int viewportSize;
+    private Color cellColor=Color.RED;
 
     public GridView(){
         super(800,800);
@@ -19,6 +20,11 @@ public class GridView extends Canvas implements Observer {
         viewportSize=16;
         redraw();
         GameOfLife.getInstance().addObserver(this);
+    }
+
+    public void setCellColor(Color cellColor) {
+        this.cellColor = cellColor;
+        redraw();
     }
 
     public void moveView(int x, int y){
@@ -57,7 +63,7 @@ public class GridView extends Canvas implements Observer {
         //draw
         GraphicsContext gc=canvas.getGraphicsContext2D();
         gc.clearRect(0,0,canvas.getWidth(),canvas.getHeight());
-        gc.setFill(Color.RED);
+        gc.setFill(cellColor);
         //draw cells
         for(Coordinates c : GameOfLife.getInstance().getLiveCells()){
             if(c.getX()<currView.getX() || c.getY()<currView.getY() || c.getX()>currView.getX()+canvas.getWidth()/cellSize || c.getY()>currView.getY()+canvas.getHeight()/cellSize) continue;
