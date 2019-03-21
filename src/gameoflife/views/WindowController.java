@@ -12,8 +12,14 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.stage.FileChooser;
 import javafx.util.converter.NumberStringConverter;
 
+import javax.swing.plaf.FileChooserUI;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.util.function.UnaryOperator;
 import java.util.regex.Pattern;
 
@@ -130,6 +136,50 @@ public class WindowController {
 
     public void clearBoard(){
         GameOfLife.getInstance().clear();
+    }
+
+    public void saveFile(){
+        FileChooser fc=new FileChooser();
+        fc.setTitle("Save file...");
+        fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("GOL files","*.gol"));
+        File file=fc.showSaveDialog(speedSlider.getScene().getWindow());
+        if(file==null) return;
+        if(GameOfLife.getInstance().saveFile(file.getPath())==0){
+            Alert alert=new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Save file");
+            alert.setHeaderText("Success");
+            alert.setContentText(file.getName()+" saved successfully");
+            alert.showAndWait();
+        }
+        else {
+            Alert alert=new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Save file");
+            alert.setHeaderText("Failure");
+            alert.setContentText(file.getName()+" couldn't be saved");
+            alert.showAndWait();
+        }
+    }
+
+    public void openFile(){
+        FileChooser fc=new FileChooser();
+        fc.setTitle("Open file...");
+        fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("GOL files","*.gol"));
+        File file=fc.showOpenDialog(speedSlider.getScene().getWindow());
+        if(file==null) return;
+        if(GameOfLife.getInstance().openFile(file.getPath())==0){
+            Alert alert=new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Save file");
+            alert.setHeaderText("Success");
+            alert.setContentText(file.getName()+" saved successfully");
+            alert.showAndWait();
+        }
+        else {
+            Alert alert=new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Save file");
+            alert.setHeaderText("Failure");
+            alert.setContentText(file.getName()+" couldn't be saved");
+            alert.showAndWait();
+        }
     }
 
     public void openAbout(){

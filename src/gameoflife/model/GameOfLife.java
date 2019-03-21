@@ -1,10 +1,11 @@
 package gameoflife.model;
 
+import java.io.*;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Observable;
 
-public class GameOfLife extends Observable {
+public class GameOfLife extends Observable{
     private static GameOfLife instance=new GameOfLife();
     private HashSet<Coordinates> live;
 
@@ -90,5 +91,43 @@ public class GameOfLife extends Observable {
     @Override
     public String toString() {
         return live.toString();
+    }
+
+    public int saveFile(String file){
+        try {
+            FileOutputStream fileOS=new FileOutputStream(file);
+            ObjectOutputStream out=new ObjectOutputStream(fileOS);
+            out.writeObject(GameOfLife.getInstance().getLiveCells());
+            out.close();
+            fileOS.close();
+            return 0;
+        }catch (IOException e){
+            e.printStackTrace();
+            return -1;
+        }
+    }
+
+    public int openFile(String file){
+        try
+        {
+            FileInputStream fileIS=new FileInputStream(file);
+            ObjectInputStream in=new ObjectInputStream(fileIS);
+            this.live=(HashSet<Coordinates>)in.readObject();
+            in.close();
+            fileIS.close();
+            setChanged();
+            notifyObservers();
+            return 0;
+        }
+        catch (ClassNotFoundException i)
+        {
+            i.printStackTrace();
+            return -5;
+        }
+        catch (IOException i)
+        {
+            i.printStackTrace();
+            return -1;
+        }
     }
 }
