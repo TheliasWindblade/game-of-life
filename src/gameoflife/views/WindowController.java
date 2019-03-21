@@ -3,13 +3,16 @@ package gameoflife.views;
 import gameoflife.model.Coordinates;
 import gameoflife.model.GameOfLife;
 import gameoflife.model.ThreadManager;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Task;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
-import javafx.scene.control.Slider;
+import javafx.scene.control.*;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.util.converter.NumberStringConverter;
 
 
 public class WindowController {
@@ -19,25 +22,64 @@ public class WindowController {
     @FXML
     private Slider speedSlider;
 
+    @FXML
+    private Button playButton;
+
+    @FXML
+    private TextField xCoord;
+
+    @FXML
+    private TextField yCoord;
+
+    @FXML
+    private TextField sizePrompt;
+
+
     private boolean running=false;
 
     public void moveNorth(){
-        gridView.moveView(0,-5);
+        moveView(0,-5);
     }
 
     public void moveEast(){
-        gridView.moveView(5,0);
+        moveView(5,0);
     }
 
     public void moveSouth(){
-        gridView.moveView(0,5);
+        moveView(0,5);
     }
 
     public void moveWest(){
-        gridView.moveView(-5,0);
+        moveView(-5,0);
     }
 
+    public void moveView(int x, int y) {
+        gridView.moveView(x,y);
+        xCoord.setText(Integer.toString(gridView.getViewport().getX()));
+        yCoord.setText(Integer.toString(gridView.getViewport().getY()));
+    }
+
+    public void setView(){
+        Coordinates c = new Coordinates(Integer.valueOf(xCoord.getText()),Integer.valueOf(yCoord.getText()));
+        gridView.setView(c);
+    }
+
+    public void setViewportSize(){
+        int c = Integer.valueOf(sizePrompt.getText());
+        gridView.resizeViewport(c);
+    }
+
+    public void refocusGrid(){ playButton.getParent().requestFocus();}
+
     public void buildHandlers(){
+        xCoord.setTextFormatter(new TextFormatter<>(new NumberStringConverter()));
+        yCoord.setTextFormatter(new TextFormatter<>(new NumberStringConverter()));
+        sizePrompt.setTextFormatter(new TextFormatter<>(new NumberStringConverter()));
+
+        xCoord.setText("0");
+        yCoord.setText("0");
+        sizePrompt.setText("16");
+
         Scene scene = speedSlider.getScene();
         scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
@@ -65,12 +107,30 @@ public class WindowController {
     }
 
     public void gridClick(MouseEvent e){
-        GameOfLife.getInstance().modifyCell(new Coordinates((((int)e.getX())/50)+gridView.getViewport().getX(),(((int)e.getY())/50)+gridView.getViewport().getY()));
+        GameOfLife.getInstance().modifyCell(new Coordinates((((int)e.getX())/((int)gridView.getWidth()/gridView.getViewportSize()))+gridView.getViewport().getX(),(((int)e.getY())/((int)gridView.getHeight()/gridView.getViewportSize()))+gridView.getViewport().getY()));
+        refocusGrid();
+    }
+
+    public void exit(){
+        System.exit(0);
+    }
+
+    public void clearBoard(){
+        GameOfLife.getInstance().clear();
+    }
+
+    public void openAbout(){
+        Alert alert=new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("About");
+        alert.setHeaderText("Game of Life");
+        alert.setContentText("By Thelias\nVersion 1.1.0");
+        alert.showAndWait();
     }
 
     public void startStop(){
         if(running){
             ThreadManager.getInstance().stopAll();
+            playButton.setText("START");
             running=false;
         }
         else {
@@ -88,6 +148,7 @@ public class WindowController {
                 }
             };
             ThreadManager.getInstance().start(task);
+            playButton.setText("STOP");
             running=true;
         }
     }

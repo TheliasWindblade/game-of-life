@@ -4,7 +4,11 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.Slider?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
@@ -33,21 +37,43 @@
                   <Button alignment="CENTER" contentDisplay="CENTER" layoutX="40.0" layoutY="10.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#moveWest" text="W" GridPane.rowIndex="1" />
                   <Button alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="36.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#moveEast" text="E" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                   <Button alignment="CENTER" contentDisplay="CENTER" layoutX="70.0" layoutY="36.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#moveSouth" text="S" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                  <Button alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="36.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#refocusGrid" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                </children>
             </GridPane>
-            <Button alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#startStop" text="START / STOP" HBox.hgrow="SOMETIMES">
+            <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
+               <children>
+                  <Label text="Coordinates">
+                     <font>
+                        <Font name="Comic Sans MS" size="16.0" />
+                     </font>
+                  </Label>
+                  <TextField onAction="#setView" promptText="X =" text="0" fx:id="xCoord" />
+                  <TextField fx:id="yCoord" layoutX="10.0" layoutY="49.0" onAction="#setView" promptText="Y =" text="0" />
+               </children>
+            </VBox>
+            <Button fx:id="playButton" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#startStop" text="START" HBox.hgrow="SOMETIMES">
                <font>
                   <Font name="Comic Sans MS" size="32.0" />
                </font>
             </Button>
             <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
                <children>
-                  <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="Speed" textAlignment="CENTER">
+                  <Label text="Size">
                      <font>
-                        <Font size="20.0" />
+                        <Font name="Comic Sans MS" size="16.0" />
                      </font>
                   </Label>
-                  <Slider fx:id="speedSlider" blockIncrement="1.0" majorTickUnit="5.0" max="11.0" min="1.0" minorTickCount="1" showTickMarks="true" />
+                  <TextField fx:id="sizePrompt" onAction="#setViewportSize" promptText="Width" text="0" />
+               </children>
+            </VBox>
+            <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
+               <children>
+                  <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="Speed" textAlignment="CENTER">
+                     <font>
+                        <Font name="Comic Sans MS" size="20.0" />
+                     </font>
+                  </Label>
+                  <Slider fx:id="speedSlider" blockIncrement="1.0" majorTickUnit="5.0" max="11.0" min="1.0" minorTickCount="1" showTickMarks="true" snapToTicks="true" value="6.0" />
                </children>
             </VBox>
          </children>
@@ -60,4 +86,25 @@
 
         </GridView>
     </center>
+   <top>
+      <MenuBar BorderPane.alignment="CENTER">
+        <menus>
+          <Menu mnemonicParsing="false" text="File">
+            <items>
+              <MenuItem mnemonicParsing="false" onAction="#exit" text="Close" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Edit">
+            <items>
+              <MenuItem mnemonicParsing="false" onAction="#clearBoard" text="Clear board" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Help">
+            <items>
+              <MenuItem mnemonicParsing="false" onAction="#openAbout" text="About" />
+            </items>
+          </Menu>
+        </menus>
+      </MenuBar>
+   </top>
 </BorderPane>

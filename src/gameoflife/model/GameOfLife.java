@@ -7,11 +7,9 @@ import java.util.Observable;
 public class GameOfLife extends Observable {
     private static GameOfLife instance=new GameOfLife();
     private HashSet<Coordinates> live;
-    private int maxSize;
 
     private GameOfLife(){
         live=new HashSet<>();
-        maxSize=100;
     }
 
     public static GameOfLife getInstance() {
@@ -22,12 +20,10 @@ public class GameOfLife extends Observable {
         return live;
     }
 
-    public int getMaxSize() {
-        return maxSize;
-    }
-
-    public void setMaxSize(int maxSize) {
-        this.maxSize = maxSize;
+    public void clear(){
+        live.clear();
+        setChanged();
+        notifyObservers();
     }
 
     private void switchCell(Coordinates c){
@@ -71,10 +67,7 @@ public class GameOfLife extends Observable {
                 }
             }
             else {
-                if(Math.abs(c.getX())>maxSize || Math.abs(c.getY())>maxSize){
-                    switchCell(c);
-                }
-                else if(x<2 || x>3)
+                if(x<2 || x>3)
                 {
                     switchCell(c);
                 }
