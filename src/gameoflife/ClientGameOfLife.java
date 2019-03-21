@@ -12,8 +12,6 @@ import javafx.stage.Stage;
 
 public class ClientGameOfLife extends Application {
 
-    public static Stage primaryStage;
-
     @Override
     public void start(Stage primaryStage) throws Exception {
         FXMLLoader loader=new FXMLLoader();
@@ -24,7 +22,6 @@ public class ClientGameOfLife extends Application {
         WindowController controller=loader.getController();
         controller.buildHandlers();
         GameOfLife.getInstance().step();
-        ClientGameOfLife.primaryStage=primaryStage;
         primaryStage.setOnCloseRequest(event -> {
             ThreadManager.getInstance().stopAll();
             Platform.exit();
