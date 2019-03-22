@@ -186,7 +186,7 @@ public class WindowController {
         Alert alert=new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("About");
         alert.setHeaderText("Game of Life");
-        alert.setContentText("By Thelias\nVersion 1.1.2");
+        alert.setContentText("By Thelias\nVersion 1.2.1");
         alert.showAndWait();
     }
 
